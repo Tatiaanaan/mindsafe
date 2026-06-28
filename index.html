@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindSafe Ecuador</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { background-color: #0f172a; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .phone { width: 100%; max-width: 375px; height: 100vh; max-height: 700px; background-color: #f8fafc; display: flex; flex-direction: column; position: relative; border-radius: 12px; overflow: hidden; }
+        .status-bar { background-color: #1e3a8a; color: white; padding: 10px 20px; display: flex; justify-content: space-between; font-size: 11px; }
+        .screen { flex: 1; overflow-y: auto; padding: 15px; display: none; }
+        .screen.active { display: block; }
+        .header h1 { color: #1e3a8a; font-size: 22px; font-weight: bold; }
+        .header p { color: #64748b; font-size: 12px; margin-bottom: 15px; }
+        .crisis-box { background: #fee2e2; border-left: 4px solid #ef4444; padding: 12px; border-radius: 10px; margin-bottom: 15px; font-size: 12px; color: #991b1b; line-height: 1.4; }
+        .challenge-card { background: linear-gradient(135deg, #0d9488, #115e59); color: white; padding: 15px; border-radius: 16px; margin-bottom: 15px; }
+        .challenge-card h3 { font-size: 15px; margin-bottom: 5px; }
+        .challenge-card p { font-size: 12px; opacity: 0.9; margin-bottom: 10px; }
+        .challenge-btn { width: 100%; background: white; color: #115e59; border: none; padding: 8px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; }
+        .suggested-btn { background: #e2e8f0; color: #334155; padding: 8px 12px; border-radius: 20px; font-size: 11px; display: inline-block; margin: 4px; cursor: pointer; border: none; font-weight: bold; }
+        .action-banner { background: #2563eb; color: white; padding: 15px; border-radius: 16px; text-align: center; cursor: pointer; margin-top: 10px; }
+        .chat-layout { display: flex; flex-direction: column; height: 100%; }
+        .chat-header { border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .chat-box { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; min-height: 350px; max-height: 380px; }
+        .msg { max-width: 85%; padding: 10px 14px; font-size: 13px; border-radius: 14px; line-height: 1.4; }
+        .msg.bot { background-color: #e0f2fe; color: #0369a1; align-self: flex-start; border-top-left-radius: 0; }
+        .msg.user { background-color: #2563eb; color: white; align-self: flex-end; border-top-right-radius: 0; }
+        .chat-input-area { display: flex; gap: 8px; margin-top: 10px; }
+        .chat-input { flex: 1; padding: 10px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 13px; outline: none; }
+        .chat-send { background: #2563eb; color: white; border: none; width: 40px; height: 38px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+        .directory-box { background: white; padding: 15px; border-radius: 16px; border: 1px solid #e2e8f0; margin-top: 15px; }
+        .sos-link { background: #dc2626; color: white; padding: 12px; border-radius: 12px; text-align: center; font-weight: bold; font-size: 13px; border: none; width: 100%; display: block; text-decoration: none; margin-bottom: 8px; }
+        .nav-bar { height: 60px; background: white; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-around; align-items: center; }
+        .nav-item { background: none; border: none; color: #94a3b8; font-size: 12px; font-weight: bold; cursor: pointer; }
+        .nav-item.active { color: #2563eb; }
+    </style>
+</head>
+<body>
+    <div class="phone">
+        <div class="status-bar"><span>15:30</span><span>Ecuador - Seguro</span></div>
+        <div id="screen-home" class="screen active">
+            <div class="header"><h1>MindSafe</h1><p>Protección contra la presión social</p></div>
+            <div class="crisis-box"><strong>¿Presión o ansiedad por consumo en este momento?</strong><br>Usa el chat de abajo para desahogarte de forma anónima.</div>
+            <div class="challenge-card">
+                <h3>Reto: Aprende a decir NO</h3>
+                <p>Si te insisten en consumir algo (vapes o sustancias), di: "Paso, hoy no tengo ganas".</p>
+                <button class="challenge-btn" onclick="this.innerText='¡Reto Completado!';">Completar Reto</button>
+            </div>
+            <div>
+                <p style="font-size: 12px; font-weight: bold; color: #1e3a8a; margin-bottom: 5px;">Toca para preguntar:</p>
+                <button class="suggested-btn" onclick="preguntarDirecto('Mis amigos me presionan para probar cosas en las fiestas')">Presión Social</button>
+                <button class="suggested-btn" onclick="preguntarDirecto('Siento que consumo cosas para olvidar mis problemas')">Problemas Emocionales</button>
+            </div>
+            <div class="action-banner" onclick="cambiarPantalla('chat')"><h4>Iniciar Chat con SafeBot</h4></div>
+            <div class="directory-box">
+                <a href="tel:171" class="sos-link">🚨 LLAMAR AL 171 (Opción 6) - Apoyo MSP</a>
+            </div>
+        </div>
+        <div id="screen-chat" class="screen">
+            <div class="chat-layout">
+                <div class="chat-header"><h3>SafeBot</h3><button onclick="cambiarPantalla('home')" style="color: #2563eb; border:none; background:none; font-weight:bold;">Volver</button></div>
+                <div class="chat-box" id="chat-box"><div class="msg bot">Hola. Aquí puedes hablar con total libertad sobre presión social o problemas emocionales. No te juzgo.</div></div>
+                <div class="chat-input-area"><input type="text" id="chat-input" class="chat-input" placeholder="Escribe aquí..."><button class="chat-send" onclick="enviarMensaje()">></button></div>
+            </div>
+        </div>
+        <div class="nav-bar">
+            <button class="nav-item active" id="btn-nav-home" onclick="cambiarPantalla('home')">🏠 Inicio</button>
+            <button class="nav-item" id="btn-nav-chat" onclick="cambiarPantalla('chat')">💬 SafeBot</button>
+        </div>
+    </div>
+    <script>
+        function cambiarPantalla(p) {
+            document.getElementById('screen-home').classList.remove('active');
+            document.getElementById('screen-chat').classList.remove('active');
+            if (p === 'home') document.getElementById('screen-home').classList.add('active');
+            else document.getElementById('screen-chat').classList.add('active');
+        }
+        function preguntarDirecto(t) { cambiarPantalla('chat'); document.getElementById('chat-input').value = t; enviarMensaje(); }
+        function enviarMensaje() {
+            var i = document.getElementById('chat-input'); var b = document.getElementById('chat-box'); var t = i.value.trim();
+            if (t === "") return;
+            var mU = document.createElement('div'); mU.className = 'msg user'; mU.innerText = t; b.appendChild(mU);
+            i.value = ""; b.scrollTop = b.scrollHeight;
+            setTimeout(function() {
+                var mB = document.createElement('div'); mB.className = 'msg bot'; var mT = t.toLowerCase();
+                if (mT.includes('presion') || mT.includes('amigos')) { mB.innerText = "La presión social es difícil, pero recuerda que un amigo de verdad respeta que digas que 'no'. No necesitas consumir para encajar."; }
+                else if (mT.includes('consumo') || mT.includes('problemas') || mT.includes('olvidar')) { mB.innerText = "Entiendo que busques una salida rápida cuando te sientes mal, pero las sustancias no borran los problemas familiares o la ansiedad. Hablar de ello aquí sí te ayudará."; }
+                else { mB.innerText = "Te escucho. En MindSafe estamos contigo paso a paso de forma totalmente privada."; }
+                b.appendChild(mB); b.scrollTop = b.scrollHeight;
+            }, 800);
+        }
+    </script>
+</body>
+</html>
