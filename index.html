@@ -1,95 +1,216 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MindSafe Ecuador</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { background-color: #0f172a; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .phone { width: 100%; max-width: 375px; height: 100vh; max-height: 700px; background-color: #f8fafc; display: flex; flex-direction: column; position: relative; border-radius: 12px; overflow: hidden; }
-        .status-bar { background-color: #1e3a8a; color: white; padding: 10px 20px; display: flex; justify-content: space-between; font-size: 11px; }
-        .screen { flex: 1; overflow-y: auto; padding: 15px; display: none; }
-        .screen.active { display: block; }
-        .header h1 { color: #1e3a8a; font-size: 22px; font-weight: bold; }
-        .header p { color: #64748b; font-size: 12px; margin-bottom: 15px; }
-        .crisis-box { background: #fee2e2; border-left: 4px solid #ef4444; padding: 12px; border-radius: 10px; margin-bottom: 15px; font-size: 12px; color: #991b1b; line-height: 1.4; }
-        .challenge-card { background: linear-gradient(135deg, #0d9488, #115e59); color: white; padding: 15px; border-radius: 16px; margin-bottom: 15px; }
-        .challenge-card h3 { font-size: 15px; margin-bottom: 5px; }
-        .challenge-card p { font-size: 12px; opacity: 0.9; margin-bottom: 10px; }
-        .challenge-btn { width: 100%; background: white; color: #115e59; border: none; padding: 8px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; }
-        .suggested-btn { background: #e2e8f0; color: #334155; padding: 8px 12px; border-radius: 20px; font-size: 11px; display: inline-block; margin: 4px; cursor: pointer; border: none; font-weight: bold; }
-        .action-banner { background: #2563eb; color: white; padding: 15px; border-radius: 16px; text-align: center; cursor: pointer; margin-top: 10px; }
-        .chat-layout { display: flex; flex-direction: column; height: 100%; }
-        .chat-header { border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .chat-box { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; min-height: 350px; max-height: 380px; }
-        .msg { max-width: 85%; padding: 10px 14px; font-size: 13px; border-radius: 14px; line-height: 1.4; }
-        .msg.bot { background-color: #e0f2fe; color: #0369a1; align-self: flex-start; border-top-left-radius: 0; }
-        .msg.user { background-color: #2563eb; color: white; align-self: flex-end; border-top-right-radius: 0; }
-        .chat-input-area { display: flex; gap: 8px; margin-top: 10px; }
-        .chat-input { flex: 1; padding: 10px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 13px; outline: none; }
-        .chat-send { background: #2563eb; color: white; border: none; width: 40px; height: 38px; border-radius: 10px; cursor: pointer; font-weight: bold; }
-        .directory-box { background: white; padding: 15px; border-radius: 16px; border: 1px solid #e2e8f0; margin-top: 15px; }
-        .sos-link { background: #dc2626; color: white; padding: 12px; border-radius: 12px; text-align: center; font-weight: bold; font-size: 13px; border: none; width: 100%; display: block; text-decoration: none; margin-bottom: 8px; }
-        .nav-bar { height: 60px; background: white; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-around; align-items: center; }
-        .nav-item { background: none; border: none; color: #94a3b8; font-size: 12px; font-weight: bold; cursor: pointer; }
-        .nav-item.active { color: #2563eb; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>MindSafe Ecuador</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --azul: #1e3a8a; --azul-claro: #2563eb; --azul-tenue: #dbeafe;
+      --teal: #0f766e; --teal-tenue: #ccfbf1; --rojo: #dc2626;
+      --rojo-tenue: #fee2e2; --amarillo-tenue: #fef9c3; --amarillo: #ca8a04;
+      --gris-texto: #475569; --gris-claro: #f1f5f9; --borde: #e2e8f0;
+      --blanco: #ffffff; --fondo: #f8fafc;
+    }
+    body { background:#0f172a; display:flex; justify-content:center; align-items:center; min-height:100vh; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }
+    .phone { width:100%; max-width:390px; height:100vh; max-height:780px; background:var(--fondo); display:flex; flex-direction:column; border-radius:16px; overflow:hidden; box-shadow:0 24px 64px rgba(0,0,0,0.5); }
+    .status-bar { background:var(--azul); color:#fff; padding:10px 20px; display:flex; justify-content:space-between; font-size:11px; font-weight:500; flex-shrink:0; }
+    .screen { flex:1; overflow-y:auto; display:none; flex-direction:column; }
+    .screen.active { display:flex; }
+    #screen-home { padding:18px 16px 8px; gap:12px; }
+    .app-header h1 { color:var(--azul); font-size:24px; font-weight:700; letter-spacing:-0.5px; }
+    .app-header p { color:var(--gris-texto); font-size:12px; margin-top:2px; }
+    .crisis-box { background:var(--rojo-tenue); border-left:3px solid var(--rojo); padding:11px 13px; border-radius:0 10px 10px 0; font-size:12px; color:#991b1b; line-height:1.5; }
+    .crisis-box strong { display:block; margin-bottom:2px; font-size:12.5px; }
+    .challenge-card { background:linear-gradient(135deg,var(--teal),#134e4a); color:#fff; padding:14px; border-radius:14px; }
+    .challenge-card h3 { font-size:14px; font-weight:600; margin-bottom:4px; }
+    .challenge-card p { font-size:12px; opacity:.88; line-height:1.45; margin-bottom:10px; }
+    .challenge-btn { width:100%; background:rgba(255,255,255,0.15); color:#fff; border:1px solid rgba(255,255,255,0.35); padding:8px; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; transition:background .2s; }
+    .challenge-btn:hover { background:rgba(255,255,255,0.25); }
+    .challenge-btn.done { background:rgba(255,255,255,0.08); opacity:.7; cursor:default; }
+    .section-label { font-size:11px; font-weight:600; color:var(--azul); letter-spacing:.4px; text-transform:uppercase; }
+    .chips { display:flex; flex-wrap:wrap; gap:6px; }
+    .chip { background:var(--blanco); color:var(--gris-texto); border:1px solid var(--borde); padding:6px 11px; border-radius:20px; font-size:11.5px; font-weight:500; cursor:pointer; transition:all .15s; }
+    .chip:hover { background:var(--azul-tenue); color:var(--azul); border-color:#93c5fd; }
+    .cta-banner { background:var(--azul-claro); color:#fff; padding:13px; border-radius:12px; text-align:center; font-size:13px; font-weight:600; cursor:pointer; transition:background .2s; }
+    .cta-banner:hover { background:#1d4ed8; }
+    .sos-btn { display:block; background:var(--rojo); color:#fff; padding:12px; border-radius:10px; text-align:center; font-size:13px; font-weight:600; text-decoration:none; border:none; width:100%; cursor:pointer; }
+    .tip-card { background:var(--amarillo-tenue); border:1px solid #fde68a; border-radius:10px; padding:11px 13px; font-size:12px; color:#78350f; line-height:1.5; }
+    .tip-card strong { color:var(--amarillo); }
+    #screen-chat { padding:0; }
+    .chat-layout { display:flex; flex-direction:column; height:100%; }
+    .chat-header { display:flex; justify-content:space-between; align-items:center; padding:14px 16px 12px; border-bottom:1px solid var(--borde); background:var(--blanco); flex-shrink:0; }
+    .chat-header-info h3 { font-size:15px; font-weight:700; color:var(--azul); }
+    .chat-header-info span { font-size:11px; color:#64748b; }
+    .ia-badge { background:#dcfce7; color:#15803d; font-size:10px; font-weight:700; padding:2px 6px; border-radius:10px; margin-left:6px; }
+    .back-btn { background:none; border:none; color:var(--azul-claro); font-size:12px; font-weight:600; cursor:pointer; padding:4px 8px; }
+    .chat-box { flex:1; overflow-y:auto; padding:14px 14px 6px; display:flex; flex-direction:column; gap:8px; }
+    .msg { max-width:86%; padding:10px 13px; font-size:13px; border-radius:16px; line-height:1.5; word-break:break-word; }
+    .msg.bot { background:var(--azul-tenue); color:#1e40af; align-self:flex-start; border-top-left-radius:3px; }
+    .msg.user { background:var(--azul-claro); color:#fff; align-self:flex-end; border-top-right-radius:3px; }
+    .msg.typing { opacity:.6; font-style:italic; }
+    .quick-replies { padding:6px 14px 8px; display:flex; flex-wrap:wrap; gap:5px; flex-shrink:0; }
+    .qr-btn { background:var(--blanco); border:1px solid #93c5fd; color:var(--azul-claro); padding:5px 10px; border-radius:16px; font-size:11px; font-weight:500; cursor:pointer; transition:all .15s; }
+    .qr-btn:hover { background:var(--azul-tenue); }
+    .chat-input-row { display:flex; gap:8px; padding:8px 12px 14px; background:var(--blanco); border-top:1px solid var(--borde); flex-shrink:0; }
+    .chat-input { flex:1; padding:10px 13px; border:1px solid var(--borde); border-radius:22px; font-size:13px; outline:none; background:var(--gris-claro); color:#1e293b; }
+    .chat-input:focus { border-color:#93c5fd; background:var(--blanco); }
+    .send-btn { background:var(--azul-claro); color:#fff; border:none; width:40px; height:40px; border-radius:50%; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .2s; }
+    .send-btn:hover { background:#1d4ed8; }
+    #screen-recursos { padding:18px 16px 8px; gap:12px; }
+    .recursos-header h2 { color:var(--azul); font-size:18px; font-weight:700; }
+    .recursos-header p { color:var(--gris-texto); font-size:12px; margin-top:2px; }
+    .recurso-card { background:var(--blanco); border:1px solid var(--borde); border-radius:12px; padding:14px; }
+    .recurso-card h4 { font-size:13px; font-weight:700; color:#1e293b; margin-bottom:4px; }
+    .recurso-card p { font-size:12px; color:var(--gris-texto); line-height:1.45; margin-bottom:10px; }
+    .recurso-link { display:block; text-align:center; padding:8px; border-radius:8px; font-size:12px; font-weight:600; text-decoration:none; border:none; cursor:pointer; width:100%; }
+    .recurso-link.rojo { background:var(--rojo); color:#fff; }
+    .recurso-link.azul { background:var(--azul-claro); color:#fff; }
+    .recurso-link.teal { background:var(--teal); color:#fff; }
+    .nav-bar { height:58px; background:var(--blanco); border-top:1px solid var(--borde); display:flex; justify-content:space-around; align-items:center; flex-shrink:0; }
+    .nav-btn { background:none; border:none; color:#94a3b8; font-size:10.5px; font-weight:600; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:2px; padding:4px 16px; }
+    .nav-btn .nav-icon { font-size:20px; }
+    .nav-btn.active { color:var(--azul-claro); }
+    @media (max-width:420px) { .phone { border-radius:0; max-height:100vh; } body { align-items:flex-start; } }
+  </style>
 </head>
 <body>
-    <div class="phone">
-        <div class="status-bar"><span>15:30</span><span>Ecuador - Seguro</span></div>
-        <div id="screen-home" class="screen active">
-            <div class="header"><h1>MindSafe</h1><p>Protección contra la presión social</p></div>
-            <div class="crisis-box"><strong>¿Presión o ansiedad por consumo en este momento?</strong><br>Usa el chat de abajo para desahogarte de forma anónima.</div>
-            <div class="challenge-card">
-                <h3>Reto: Aprende a decir NO</h3>
-                <p>Si te insisten en consumir algo (vapes o sustancias), di: "Paso, hoy no tengo ganas".</p>
-                <button class="challenge-btn" onclick="this.innerText='¡Reto Completado!';">Completar Reto</button>
-            </div>
-            <div>
-                <p style="font-size: 12px; font-weight: bold; color: #1e3a8a; margin-bottom: 5px;">Toca para preguntar:</p>
-                <button class="suggested-btn" onclick="preguntarDirecto('Mis amigos me presionan para probar cosas en las fiestas')">Presión Social</button>
-                <button class="suggested-btn" onclick="preguntarDirecto('Siento que consumo cosas para olvidar mis problemas')">Problemas Emocionales</button>
-            </div>
-            <div class="action-banner" onclick="cambiarPantalla('chat')"><h4>Iniciar Chat con SafeBot</h4></div>
-            <div class="directory-box">
-                <a href="tel:171" class="sos-link">🚨 LLAMAR AL 171 (Opción 6) - Apoyo MSP</a>
-            </div>
-        </div>
-        <div id="screen-chat" class="screen">
-            <div class="chat-layout">
-                <div class="chat-header"><h3>SafeBot</h3><button onclick="cambiarPantalla('home')" style="color: #2563eb; border:none; background:none; font-weight:bold;">Volver</button></div>
-                <div class="chat-box" id="chat-box"><div class="msg bot">Hola. Aquí puedes hablar con total libertad sobre presión social o problemas emocionales. No te juzgo.</div></div>
-                <div class="chat-input-area"><input type="text" id="chat-input" class="chat-input" placeholder="Escribe aquí..."><button class="chat-send" onclick="enviarMensaje()">></button></div>
-            </div>
-        </div>
-        <div class="nav-bar">
-            <button class="nav-item active" id="btn-nav-home" onclick="cambiarPantalla('home')">🏠 Inicio</button>
-            <button class="nav-item" id="btn-nav-chat" onclick="cambiarPantalla('chat')">💬 SafeBot</button>
-        </div>
+<div class="phone">
+  <div class="status-bar">
+    <span id="reloj">--:--</span>
+    <span>🇪🇨 Ecuador · Seguro</span>
+  </div>
+
+  <div id="screen-home" class="screen active">
+    <div class="app-header">
+      <h1>MindSafe</h1>
+      <p>Protección contra la presión social · Ecuador</p>
     </div>
-    <script>
-        function cambiarPantalla(p) {
-            document.getElementById('screen-home').classList.remove('active');
-            document.getElementById('screen-chat').classList.remove('active');
-            if (p === 'home') document.getElementById('screen-home').classList.add('active');
-            else document.getElementById('screen-chat').classList.add('active');
-        }
-        function preguntarDirecto(t) { cambiarPantalla('chat'); document.getElementById('chat-input').value = t; enviarMensaje(); }
-        function enviarMensaje() {
-            var i = document.getElementById('chat-input'); var b = document.getElementById('chat-box'); var t = i.value.trim();
-            if (t === "") return;
-            var mU = document.createElement('div'); mU.className = 'msg user'; mU.innerText = t; b.appendChild(mU);
-            i.value = ""; b.scrollTop = b.scrollHeight;
-            setTimeout(function() {
-                var mB = document.createElement('div'); mB.className = 'msg bot'; var mT = t.toLowerCase();
-                if (mT.includes('presion') || mT.includes('amigos')) { mB.innerText = "La presión social es difícil, pero recuerda que un amigo de verdad respeta que digas que 'no'. No necesitas consumir para encajar."; }
-                else if (mT.includes('consumo') || mT.includes('problemas') || mT.includes('olvidar')) { mB.innerText = "Entiendo que busques una salida rápida cuando te sientes mal, pero las sustancias no borran los problemas familiares o la ansiedad. Hablar de ello aquí sí te ayudará."; }
-                else { mB.innerText = "Te escucho. En MindSafe estamos contigo paso a paso de forma totalmente privada."; }
-                b.appendChild(mB); b.scrollTop = b.scrollHeight;
-            }, 800);
-        }
-    </script>
+    <div class="crisis-box">
+      <strong>¿Presión o ansiedad en este momento?</strong>
+      Usa el chat de abajo para hablar de forma anónima. Nadie sabrá que estás aquí.
+    </div>
+    <div class="challenge-card">
+      <h3>🎯 Reto del día: aprende a decir no</h3>
+      <p>Si alguien te insiste en consumir algo, di tranquilamente: <em>"Paso, hoy no me provoca."</em> No necesitas dar más explicaciones.</p>
+      <button class="challenge-btn" id="reto-btn" onclick="completarReto()">Marcar reto como completado</button>
+    </div>
+    <div class="section-label">Toca para preguntar al SafeBot</div>
+    <div class="chips">
+      <button class="chip" onclick="preguntarDirecto('Mis amigos me presionan para tomar o fumar en las fiestas')">🙋 Presión social</button>
+      <button class="chip" onclick="preguntarDirecto('Siento ansiedad y consumo cosas para olvidar mis problemas')">💭 Ansiedad y emociones</button>
+      <button class="chip" onclick="preguntarDirecto('¿Qué tan peligrosos son los vapes?')">🚬 Riesgos de vapes</button>
+      <button class="chip" onclick="preguntarDirecto('¿Cómo sé si tengo un problema con el consumo?')">🔍 ¿Tengo un problema?</button>
+      <button class="chip" onclick="preguntarDirecto('Me siento solo y no sé con quién hablar')">😔 Me siento solo</button>
+    </div>
+    <div class="tip-card">
+      <strong>💡 Dato rápido:</strong> En Ecuador, la edad promedio de inicio de consumo de alcohol es 13 años. Conocer los riesgos es tu mejor defensa.
+    </div>
+    <div class="cta-banner" onclick="cambiarPantalla('chat')">💬 Iniciar chat con SafeBot</div>
+    <a href="tel:171" class="sos-btn">🚨 LLAMAR AL 171 · Opción 6 · Apoyo MSP Ecuador</a>
+  </div>
+
+  <div id="screen-chat" class="screen">
+    <div class="chat-layout">
+      <div class="chat-header">
+        <div class="chat-header-info">
+          <h3>SafeBot <span class="ia-badge">Privado</span></h3>
+          <span>Sin juicios · Completamente anónimo</span>
+        </div>
+        <button class="back-btn" onclick="cambiarPantalla('home')">← Volver</button>
+      </div>
+      <div class="chat-box" id="chat-box">
+        <div class="msg bot">Hola 👋 Soy SafeBot. Aquí puedes hablar con total libertad sobre presión social, emociones o cualquier duda sobre sustancias. Todo es privado, sin juicios.</div>
+      </div>
+      <div class="quick-replies" id="quick-replies">
+        <button class="qr-btn" onclick="preguntarDirecto('Mis amigos me presionan para tomar')">Presión de amigos</button>
+        <button class="qr-btn" onclick="preguntarDirecto('Me siento muy ansioso')">Ansiedad</button>
+        <button class="qr-btn" onclick="preguntarDirecto('¿Qué tan peligrosos son los vapes?')">Riesgos de vapes</button>
+        <button class="qr-btn" onclick="preguntarDirecto('Me siento solo y triste')">Me siento mal</button>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" id="chat-input" class="chat-input" placeholder="Escribe aquí..." onkeydown="if(event.key==='Enter')enviarMensaje()">
+        <button class="send-btn" onclick="enviarMensaje()" aria-label="Enviar">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-recursos" class="screen">
+    <div class="recursos-header">
+      <h2>📋 Recursos de ayuda</h2>
+      <p>Líneas de apoyo y centros de ayuda en Ecuador</p>
+    </div>
+    <div class="recurso-card">
+      <h4>🚨 Línea de crisis · MSP Ecuador</h4>
+      <p>Ministerio de Salud Pública. Atención gratuita 24/7 para crisis emocionales, adicciones y salud mental.</p>
+      <a href="tel:171" class="recurso-link rojo">Llamar al 171 · Opción 6</a>
+    </div>
+    <div class="recurso-card">
+      <h4>📞 Consejo Nacional de Control de Sustancias</h4>
+      <p>CONSEP Ecuador. Orientación sobre prevención y tratamiento de consumo de drogas.</p>
+      <a href="tel:18002737726" class="recurso-link azul">Llamar al 1-800-DROGASNO</a>
+    </div>
+    <div class="recurso-card">
+      <h4>🏥 Centro de Salud más cercano</h4>
+      <p>Los centros del MSP ofrecen atención en salud mental gratuita. Busca el más cercano a tu ubicación.</p>
+      <a href="https://www.salud.gob.ec" target="_blank" class="recurso-link teal">Ver directorio MSP</a>
+    </div>
+    <div class="recurso-card">
+      <h4>💬 Habla con SafeBot ahora</h4>
+      <p>Si no estás listo para llamar, puedes hablar de forma anónima con SafeBot primero. Siempre disponible.</p>
+      <button class="recurso-link azul" onclick="cambiarPantalla('chat')">Ir al chat</button>
+    </div>
+  </div>
+
+  <nav class="nav-bar">
+    <button class="nav-btn active" id="nav-home" onclick="cambiarPantalla('home')"><span class="nav-icon">🏠</span>Inicio</button>
+    <button class="nav-btn" id="nav-chat" onclick="cambiarPantalla('chat')"><span class="nav-icon">💬</span>SafeBot</button>
+    <button class="nav-btn" id="nav-recursos" onclick="cambiarPantalla('recursos')"><span class="nav-icon">📋</span>Recursos</button>
+  </nav>
+</div>
+
+<script>
+function actualizarReloj(){const a=new Date();document.getElementById('reloj').textContent=String(a.getHours()).padStart(2,'0')+':'+String(a.getMinutes()).padStart(2,'0');}
+actualizarReloj();setInterval(actualizarReloj,10000);
+
+function cambiarPantalla(p){['home','chat','recursos'].forEach(s=>{document.getElementById('screen-'+s).classList.remove('active');document.getElementById('nav-'+s).classList.remove('active');});document.getElementById('screen-'+p).classList.add('active');document.getElementById('nav-'+p).classList.add('active');}
+
+function completarReto(){const btn=document.getElementById('reto-btn');btn.textContent='✅ ¡Reto completado! Muy bien hecho.';btn.classList.add('done');btn.disabled=true;}
+
+const KB=[
+  {tags:['presion','amigos','insisten','obligan','fiesta','fiestas','grupo','encajar','burlan'],respuestas:["La presión de grupo es real y puede ser muy difícil de manejar. Pero recuerda: un amigo de verdad respeta cuando dices \"no\". Si alguien te presiona o se burla por negarte, esa persona no está pensando en tu bienestar.\n\nAlgo que funciona es tener una respuesta lista: \"No me provoca hoy\", \"Paso, gracias\" o incluso inventar una excusa. No necesitas justificarte.\n\n¿Quieres practicar cómo responder en situaciones específicas?","Sentir presión social es normalísimo, especialmente en fiestas. Lo importante es recordar que consumir algo no te hace más interesante ni te da más amigos reales.\n\nUna técnica útil: si alguien te ofrece algo, acepta un vaso de agua en la mano. Con algo en la mano, la gente pregunta menos.\n\n¿Hay una situación concreta que te preocupa?"]},
+  {tags:['vape','vapes','vapear','puff','pod','cigarrillo electronico'],respuestas:["Los vapes son más peligrosos de lo que parecen. El vapor contiene nicotina (muy adictiva), metales pesados y compuestos que dañan los pulmones.\n\nEn adolescentes, la nicotina afecta el desarrollo del cerebro hasta los 25 años. Los sabores dulces están diseñados para enganchar más fácilmente.\n\n¿Alguien te ofreció uno o ya estás usando?","Los vapes generan adicción a la nicotina muy rápido, a veces en semanas. En Ecuador se han detectado vapes sin regulación con sustancias no declaradas.\n\nSi ya usas y quieres dejarlo, el 171 (opción 6) tiene orientación gratuita. ¿Puedo ayudarte con algo más?"]},
+  {tags:['ansioso','ansiedad','angustia','nervioso','nervios','estres','estres','agobio'],respuestas:["La ansiedad es muy incómoda. El problema es que el alcohol o sustancias solo alivian momentáneamente: después la ansiedad regresa más fuerte.\n\nAlgo que funciona ahora mismo: respira lento. Inhala 4 segundos, mantén 4, exhala 6. Repite 3 veces.\n\n¿Qué está causando esa ansiedad últimamente?","Sentir ansiedad no significa que estés mal. Es una respuesta normal a situaciones difíciles.\n\nConsumír sustancias para calmarla crea un ciclo peligroso. Si es frecuente, en Ecuador hay atención gratuita en centros del MSP.\n\n¿Quieres saber cómo acceder?"]},
+  {tags:['olvidar','escapar','problema','problemas','familia','familiar','pelea','triste','tristeza','deprimido','depresion'],respuestas:["Entiendo que cuando estás pasando por algo difícil, quieras una salida rápida. Pero las sustancias no borran los problemas: los pausan y los devuelven multiplicados.\n\nLo que sí ayuda es hablar. No tienes que enfrentar eso solo. ¿Me cuentas un poco más?","A veces los problemas se sienten tan pesados que uno busca cualquier cosa para no pensar. Te escucho y no te juzgo.\n\nHablar libera ese peso mucho más que cualquier sustancia. ¿Qué está pasando? Estoy aquí."]},
+  {tags:['solo','soledad','sola','nadie','sin amigos','incomprendido'],respuestas:["Sentirse solo es de las sensaciones más difíciles. Y a veces el grupo donde hay consumo parece el único espacio donde encajas.\n\nPero esa conexión basada en consumir juntos es frágil. La amistad real se construye en cosas verdaderas.\n\n¿Hay algún interés tuyo donde puedas conocer gente diferente?","No estás solo/a, aunque ahora se sienta así. Muchas personas pasan por momentos así.\n\nEstoy aquí para escucharte. ¿Qué ha pasado últimamente?"]},
+  {tags:['alcohol','tomar','trago','tragos','borracho','cerveza','ron','aguardiente'],respuestas:["El alcohol es la sustancia más normalizada en Ecuador, lo que lo hace especialmente peligroso. En adolescentes afecta directamente la memoria, emociones y toma de decisiones.\n\nLa diferencia está en el por qué lo haces. ¿Estás bebiendo tú o alguien cercano te preocupa?","En fiestas hay formas de estar sin tomar: pedir agua con gas, cola, o decir que no bebes hoy. La mayoría no insiste más de una vez.\n\nSi sientes que necesitas beber para sentirte bien, vale la pena hablar con alguien. ¿Cómo te sientes?"]},
+  {tags:['droga','drogas','marihuana','weed','hierba','coca','cocaina','pasta','pastillas','extasis'],respuestas:["Es valiente que busques información. Las drogas ilegales tienen riesgos serios: no sabes qué contienen, generan dependencia y pueden tener consecuencias graves.\n\nPuedes llamar al 171 (opción 6) de forma gratuita y confidencial. ¿Qué está pasando exactamente?","Hablar de esto es el primer paso. Las drogas afectan el cerebro joven de forma diferente al adulto.\n\nNo tienes que decidir solo/a. ¿Sientes presión para consumir o ya estás usando y quieres orientación?"]},
+  {tags:['adiccion','adicto','adicta','enganchado','no puedo parar','dependencia'],respuestas:["Reconocer que tienes un problema es un paso enorme y muy valiente. La adicción es una condición de salud que tiene tratamiento.\n\nEn Ecuador, el MSP ofrece atención gratuita. Llama al 171 (opción 6) con total confidencialidad.\n\n¿Quieres que te cuente cómo funciona pedir ayuda?"]},
+  {tags:['171','ayuda','medico','psicologo','terapia','centro','hospital'],respuestas:["El 171 (opción 6) es la línea del MSP Ecuador. Es gratuita, confidencial y disponible las 24 horas. No te van a juzgar.\n\nTambién puedes ir a cualquier Centro de Salud del MSP con tu cédula. La atención es gratuita.\n\n¿Quieres más información?"]},
+  {tags:['gracias','genial','bien','me ayudo','entiendo','ok','chevere'],respuestas:["Me alegra poder ayudarte 😊 Recuerda que puedes volver cuando quieras. Y si necesitas hablar con alguien real, el 171 (opción 6) siempre está disponible. ¡Cuídate mucho!","¡Qué bueno! Para eso estoy 🙌 Pedir ayuda o información nunca es señal de debilidad, es lo más inteligente que puedes hacer."]}
+];
+
+const FALLBACKS=["Te escucho. Cuéntame más sobre lo que estás viviendo, así puedo orientarte mejor. Aquí estás seguro/a.","Para darte la mejor respuesta, ¿puedes contarme un poco más sobre la situación?","Estoy aquí contigo. No hay prisa, cuéntame lo que puedas.","Eso suena importante. ¿Puedes contarme más sobre lo que está pasando?"];
+let fi=0;
+
+function obtenerRespuesta(texto){
+  const t=texto.toLowerCase().replace(/[áàä]/g,'a').replace(/[éèë]/g,'e').replace(/[íìï]/g,'i').replace(/[óòö]/g,'o').replace(/[úùü]/g,'u').replace(/ñ/g,'n');
+  for(const b of KB){if(b.tags.some(tag=>t.includes(tag))){const rs=b.respuestas;return rs[Math.floor(Math.random()*rs.length)];}}
+  return FALLBACKS[fi++%FALLBACKS.length];
+}
+
+let esperando=false;
+function addMsg(texto,rol){const box=document.getElementById('chat-box');const div=document.createElement('div');div.className='msg '+rol;div.style.whiteSpace='pre-line';div.textContent=texto;box.appendChild(div);box.scrollTop=box.scrollHeight;return div;}
+function preguntarDirecto(t){cambiarPantalla('chat');setTimeout(()=>{document.getElementById('chat-input').value=t;enviarMensaje();},200);}
+function enviarMensaje(){
+  if(esperando)return;
+  const input=document.getElementById('chat-input');const texto=input.value.trim();if(!texto)return;
+  input.value='';document.getElementById('quick-replies').style.display='none';
+  addMsg(texto,'user');esperando=true;
+  const typing=addMsg('SafeBot está escribiendo…','bot typing');
+  setTimeout(()=>{typing.remove();addMsg(obtenerRespuesta(texto),'bot');esperando=false;},800+Math.random()*700);
+}
+</script>
 </body>
 </html>
